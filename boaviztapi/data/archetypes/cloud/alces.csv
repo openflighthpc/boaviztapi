@@ -1,0 +1,5 @@
+id,vcpu,memory,ssd_storage,hdd_storage,gpu_units,platform,source
+m1.smaller,1,1,0,0,0,alces.metal,
+m1.small,1,2,10,0,0,alces.metal,
+m1.medium,2,3,10,0,0,alces.metal,
+m1.large,4,8,10,0,0,alces.metal,
