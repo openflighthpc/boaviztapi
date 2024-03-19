@@ -49,6 +49,18 @@ def get_cloud_instance_archetype(archetype_name: str, provider: str) -> Union[di
     return arch
 
 
+def get_all_cloud_instance_archetypes(provider: str):
+    arches = dict()
+    csv_path = data_dir + "/archetypes/cloud/" + provider + ".csv"
+    if os.path.exists(csv_path):
+        reader = csv.DictReader(open(csv_path, encoding='utf-8'))
+        for row in reader:
+            arches[row["id"]] = row2json(row)
+    else:
+        return False
+    return arches
+
+
 def get_archetype(archetype_name: str, csv_path: str) -> Union[dict, bool]:
     reader = csv.DictReader(open(csv_path, encoding='utf-8'))
     for row in reader:
