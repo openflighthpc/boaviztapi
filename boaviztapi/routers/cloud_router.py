@@ -12,7 +12,7 @@ from boaviztapi.model.services.cloud_instance import ServiceCloudInstance
 from boaviztapi.routers.openapi_doc.descriptions import cloud_provider_description, all_default_cloud_instances, \
     all_default_cloud_providers, get_instance_config
 from boaviztapi.routers.openapi_doc.examples import cloud_example
-from boaviztapi.service.archetype import get_cloud_instance_archetype, get_device_archetype_lst
+from boaviztapi.service.archetype import get_cloud_instance_archetype, get_device_archetype_lst, get_all_cloud_instance_archetypes
 from boaviztapi.service.impacts_computation import compute_impacts
 from boaviztapi.service.verbose import verbose_device, verbose_cloud
 
@@ -55,6 +55,15 @@ async def instance_cloud_impact(cloud_instance: Cloud = Body(None, example=cloud
     )
 
 
+@cloud_router.get('/instance/all_instance_data',
+                  description="test")
+async def server_get_all_instance_data(provider: str = Query(None, example="aws")):
+    arches = get_all_cloud_instance_archetypes(provider=provider)
+    if not arches:
+        raise HTTPException(status_code=404, detail="No available data for this cloud provider ({provider})")
+    return {"data": arches}
+
+
 @cloud_router.get('/instance',
                   description=cloud_provider_description)
 async def instance_cloud_impact(
@@ -70,7 +79,7 @@ async def instance_cloud_impact(
 
     if not instance_archetype:
         raise HTTPException(status_code=404,
-                            detail=f"{cloud_instance.instance_type} at {cloud_instance.provider} not found")
+                            detail=f"{instance_type} at {provider} not found")
 
     instance_model = mapper_cloud_instance(cloud_instance, archetype=instance_archetype)
 
